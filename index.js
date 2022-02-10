@@ -1,11 +1,20 @@
 const express = require("express");
 const app = express();
 const mongoose=require("mongoose");
-const { MongoClient } = require("mongodb");
+// const { MongoClient } = require("mongodb");
 require("dotenv").config();
 const PORT = 8080;
-
 app.use( express.json());
+const uri= process.env.MONGODB_CONNECTION_STRING;
+mongoose.connect(uri,{
+  useNewUrlParser: true, 
+  // useCreateIndex:true,
+  useUnifiedTopology:true,
+});
+const connection=mongoose.connection;
+connection.once("open",()=>{
+  console.log("Coneção com a database feita");
+});
 
 app.get("/tshirt", (req, res) => {
   res.status(200).send({
