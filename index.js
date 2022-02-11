@@ -1,18 +1,19 @@
 const express = require("express");
+const res = require("express/lib/response");
 const app = express();
-const mongoose=require("mongoose");
-// const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
+const Cust = require("./model/cust");
 require("dotenv").config();
 const PORT = 8080;
-app.use( express.json());
-const uri= process.env.MONGODB_CONNECTION_STRING;
-mongoose.connect(uri,{
-  useNewUrlParser: true, 
+app.use(express.json());
+const uri = process.env.MONGODB_CONNECTION_STRING;
+mongoose.connect(uri, {
+  useNewUrlParser: true,
   // useCreateIndex:true,
-  useUnifiedTopology:true,
+  useUnifiedTopology: true,
 });
-const connection=mongoose.connection;
-connection.once("open",()=>{
+const connection = mongoose.connection;
+connection.once("open", () => {
   console.log("Coneção com a database feita");
 });
 
@@ -33,5 +34,19 @@ app.post("/tshirt/:id", (req, res) => {
   res.send({
     tshirt: `5 com ${logo} e ID de ${id}`,
   });
+});
+
+app.post("/cust", async (req, res) => {
+  try {
+    console.log("req.body:", req.body);
+    const newcust = new Cust({
+      custFirstName: req.body.custFirstName,
+      CustLastName: req.body.CustLastName,
+    });
+    await Cust.create(newcust);
+    res.send("Cust adicionado");
+  } catch (err) {
+    console.log("error: ", err);
+  }
 });
 app.listen(PORT, () => console.log(`Esta vivo em http://localhost:${PORT}`));
