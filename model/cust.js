@@ -16,3 +16,6 @@ const custSchema = new Schema({
 });
 const Cust = mongoose.model("cust", custSchema);
 module.exports = Cust;
+
+
+
